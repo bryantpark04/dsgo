@@ -1,6 +1,6 @@
 package util
 
-type BaseMessage struct{
+type BaseMessage struct {
 	sender string
 }
 
@@ -15,5 +15,7 @@ type Message interface {
 func Send[Msg Message](to chan Msg, message Msg) {
 	to <- message
 }
+
+type Directory map[string]chan Message
 
 // using some kind of global map of node ids to chan and calling Message.send(from, to) would be nice

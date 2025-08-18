@@ -5,13 +5,13 @@ import (
 	"util"
 )
 
-func server(in chan util.Message, out map[string]chan util.Message) {
+func server(in chan util.Message, out util.Directory) {
 	<-in
 	// switch on message type
 	out[util.CLIENT] <- Pong{util.BaseMessageFrom(util.SERVER)}
 }
 
-func client(in chan util.Message, out map[string]chan util.Message) {
+func client(in chan util.Message, out util.Directory) {
 	out[util.SERVER] <- Ping{util.BaseMessageFrom(util.CLIENT)}
 	fmt.Println("Ping!")
 	<-in
@@ -19,7 +19,7 @@ func client(in chan util.Message, out map[string]chan util.Message) {
 }
 
 func main() {
-	directory := map[string]chan util.Message{
+	directory := util.Directory{
 		util.SERVER: make(chan util.Message),
 		util.CLIENT: make(chan util.Message),
 	}
