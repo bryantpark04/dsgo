@@ -1,8 +1,18 @@
 package messages
 
-type Message interface{}
+type BaseMessage struct{
+	sender string
+}
 
-func Send(to chan Message, message Message) {
+func (m BaseMessage) Sender() string { return m.sender }
+
+func BaseMessageFrom(sender string) BaseMessage { return BaseMessage{sender} }
+
+type Message interface {
+	Sender() string
+}
+
+func Send[Msg Message](to chan Msg, message Msg) {
 	to <- message
 }
 

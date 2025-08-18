@@ -1,9 +1,11 @@
 package main
 
-type Ping struct{
-	sender string
+import "messages"
+
+type Ping struct {
+	messages.BaseMessage
 }
 
-type Pong struct{
-	sender string
+type Pong struct {
+	messages.BaseMessage
 }
