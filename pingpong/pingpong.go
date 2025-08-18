@@ -9,7 +9,7 @@ func server(self string, in chan util.Message, out util.Directory) {
 	for msg := range in {
 		switch t := msg.(type) {
 		case Ping:
-			out[util.CLIENT] <- Pong{util.BaseMessageFrom(util.SERVER)}
+			util.Send(out[util.CLIENT], Pong{util.BaseMessageFrom(util.SERVER)})
 		default:
 			fmt.Println("Received unknown message: ", t)
 		}
@@ -24,7 +24,7 @@ func client(in chan util.Message, out util.Directory) {
 
 		switch input {
 		case "ping":
-			out[util.SERVER] <- Ping{util.BaseMessageFrom(util.CLIENT)}
+			util.Send(out[util.SERVER], Ping{util.BaseMessageFrom(util.CLIENT)})
 			msg := <-in
 			switch t := msg.(type) {
 			case Pong:

@@ -1,5 +1,7 @@
 package util
 
+import "math/rand"
+
 type BaseMessage struct {
 	sender string
 }
@@ -13,8 +15,11 @@ type Message interface {
 }
 
 // TODO: use this func (figure out the types) and make it lossy
-func Send[Msg Message](to chan Msg, message Msg) {
-	to <- message
+func Send(out chan Message, message Message) {
+	if rand.Float32() < PROB_MESSAGE_LOSS {
+		return
+	}
+	out <- message
 }
 
 type Directory map[string]chan Message
