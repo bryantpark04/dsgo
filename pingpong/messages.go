@@ -1,11 +1,11 @@
 package main
 
-import "messages"
+import "util"
 
 type Ping struct {
-	messages.BaseMessage
+	util.BaseMessage
 }
 
 type Pong struct {
-	messages.BaseMessage
+	util.BaseMessage
 }

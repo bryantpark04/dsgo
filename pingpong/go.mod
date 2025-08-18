@@ -1,7 +1,7 @@
-module bryantpark.dev/pingpong
+module pingpong
 
 go 1.25.0
 
-replace messages => ../messages
+replace util => ../util
 
-require messages v0.0.0-00010101000000-000000000000
+require util v0.0.0-00010101000000-000000000000

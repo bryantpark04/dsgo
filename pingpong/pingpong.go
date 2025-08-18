@@ -2,29 +2,29 @@ package main
 
 import (
 	"fmt"
-	"messages"
+	"util"
 )
 
-func server(in chan messages.Message, out map[string]chan messages.Message) {
+func server(in chan util.Message, out map[string]chan util.Message) {
 	<-in
 	// switch on message type
-	out[messages.CLIENT] <- Pong{messages.BaseMessageFrom(messages.SERVER)}
+	out[util.CLIENT] <- Pong{util.BaseMessageFrom(util.SERVER)}
 }
 
-func client(in chan messages.Message, out map[string]chan messages.Message) {
-	out[messages.SERVER] <- Ping{messages.BaseMessageFrom(messages.CLIENT)}
+func client(in chan util.Message, out map[string]chan util.Message) {
+	out[util.SERVER] <- Ping{util.BaseMessageFrom(util.CLIENT)}
 	fmt.Println("Ping!")
 	<-in
 	fmt.Println("Pong")
 }
 
 func main() {
-	directory := map[string]chan messages.Message{
-		messages.SERVER: make(chan messages.Message),
-		messages.CLIENT: make(chan messages.Message),
+	directory := map[string]chan util.Message{
+		util.SERVER: make(chan util.Message),
+		util.CLIENT: make(chan util.Message),
 	}
 
-	go server(directory[messages.SERVER], directory)
+	go server(directory[util.SERVER], directory)
 
-	client(directory[messages.CLIENT], directory)
+	client(directory[util.CLIENT], directory)
 }

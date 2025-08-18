@@ -1,4 +1,4 @@
-package messages
+package util
 
 type BaseMessage struct{
 	sender string
