@@ -5,17 +5,27 @@ import (
 	"util"
 )
 
-func server(in chan util.Message, out util.Directory) {
-	<-in
-	// switch on message type
-	out[util.CLIENT] <- Pong{util.BaseMessageFrom(util.SERVER)}
+func server(self string, in chan util.Message, out util.Directory) {
+	msg := <-in
+	switch t := msg.(type) {
+	case Ping:
+		out[util.CLIENT] <- Pong{util.BaseMessageFrom(util.SERVER)}
+	default:
+		fmt.Println("Received unknown message: ", t)
+	}
 }
 
 func client(in chan util.Message, out util.Directory) {
 	out[util.SERVER] <- Ping{util.BaseMessageFrom(util.CLIENT)}
 	fmt.Println("Ping!")
-	<-in
-	fmt.Println("Pong")
+	msg := <-in
+	switch t := msg.(type) {
+	case Pong:
+		fmt.Println("Pong")
+	default:
+		fmt.Println("Received unknown message: ", t)
+	}
+	// TODO loop
 }
 
 func main() {
@@ -24,7 +34,7 @@ func main() {
 		util.CLIENT: make(chan util.Message),
 	}
 
-	go server(directory[util.SERVER], directory)
+	go server(util.SERVER, directory[util.SERVER], directory)
 
 	client(directory[util.CLIENT], directory)
 }
