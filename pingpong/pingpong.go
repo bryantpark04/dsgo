@@ -6,26 +6,38 @@ import (
 )
 
 func server(self string, in chan util.Message, out util.Directory) {
-	msg := <-in
-	switch t := msg.(type) {
-	case Ping:
-		out[util.CLIENT] <- Pong{util.BaseMessageFrom(util.SERVER)}
-	default:
-		fmt.Println("Received unknown message: ", t)
+	for msg := range in {
+		switch t := msg.(type) {
+		case Ping:
+			out[util.CLIENT] <- Pong{util.BaseMessageFrom(util.SERVER)}
+		default:
+			fmt.Println("Received unknown message: ", t)
+		}
 	}
 }
 
 func client(in chan util.Message, out util.Directory) {
-	out[util.SERVER] <- Ping{util.BaseMessageFrom(util.CLIENT)}
-	fmt.Println("Ping!")
-	msg := <-in
-	switch t := msg.(type) {
-	case Pong:
-		fmt.Println("Pong")
-	default:
-		fmt.Println("Received unknown message: ", t)
+	for {
+		fmt.Print("> ")
+		var input string
+		fmt.Scanln(&input)
+
+		switch input {
+		case "ping":
+			out[util.SERVER] <- Ping{util.BaseMessageFrom(util.CLIENT)}
+			msg := <-in
+			switch t := msg.(type) {
+			case Pong:
+				fmt.Println("pong")
+			default:
+				fmt.Println("Received unknown message: ", t)
+			}
+		case "", "quit":
+			return
+		default:
+			fmt.Println("Command not recognized. \"quit\" to quit.")
+		}
 	}
-	// TODO loop
 }
 
 func main() {

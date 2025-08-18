@@ -12,6 +12,7 @@ type Message interface {
 	Sender() string
 }
 
+// TODO: use this func (figure out the types) and make it lossy
 func Send[Msg Message](to chan Msg, message Msg) {
 	to <- message
 }
